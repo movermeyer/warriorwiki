@@ -30,6 +30,13 @@ Deploy the warriorwiki docker image and link it to the mysql container, and your
 
 Open port 80 to the outside world according to your firewall rules.
 
-###Success!
+Success!
 
 Visit your container on the internet!
+
+###Next Steps
+
+Set up DNS
+Install proper SSL certificates
+
+
