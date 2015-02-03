@@ -49,5 +49,6 @@ Visit your container on the internet!
 
 * Set up DNS
 * Install proper SSL certificates
+* Set up non-priviledge MySQL user
 
 
