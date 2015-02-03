@@ -1,0 +1,16 @@
+#!/bin/sh
+
+#Install wikidata
+if [ ! -d /src/mediawiki/extensions/Wikibase ]; then
+    cd /src/mediawiki/
+    wget https://getcomposer.org/installer
+    php installer
+    cd /src/mediawiki/extensions
+    git clone https://git.wikimedia.org/git/mediawiki/extensions/Wikibase.git
+    cd Wikibase
+    php /src/mediawiki/composer.phar install
+    cd /src/mediawiki/
+    php maintenance/update.php --quick
+    php maintenance/runScript.php extensions/Wikibase/lib/maintenance/populateSitesTable.php
+    php maintenance/runScript.php extensions/Wikibase/client/maintenance/populateInterwiki.php
+fi
