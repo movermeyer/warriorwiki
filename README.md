@@ -20,13 +20,18 @@ Build the image.
     
 ###Deploying the Docker Image
 
+Clone my branch of mediawiki
+    
+    cd /usr/local/
+    git clone https://github.com/movermeyer/mediawiki.git
+
 Deploy MySQL Docker container according to [their instructions.][docker-mysql]
 
     docker run --name mysql -e MYSQL_ROOT_PASSWORD=mysecretpassword -d mysql
     
-Deploy the warriorwiki docker image and link it to the mysql container, and your data volume
+Deploy the warriorwiki docker image and link it to the mysql container, and mount the mediawiki branch clone as a volume
 
-    docker run -d -p 80:80 -v /usr/local/warriorwiki/data/:/data --link mysql:mysql --name=warriorwiki warriorwiki
+    docker run -d -p 80:80 -v /usr/local/mediawiki:/src/mediawiki --link mysql:mysql --name=warriorwiki warriorwiki
 
 Open port 80 to the outside world according to your firewall rules.
 
