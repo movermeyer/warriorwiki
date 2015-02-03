@@ -36,7 +36,7 @@ Visit your container on the internet!
 
 ###Next Steps
 
-Set up DNS
-Install proper SSL certificates
+* Set up DNS
+* Install proper SSL certificates
 
 
