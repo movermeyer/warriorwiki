@@ -35,9 +35,9 @@ Deploy MySQL Docker container according to [their instructions.][docker-mysql]
 
     docker run --name mysql -e MYSQL_ROOT_PASSWORD=mysecretpassword -d mysql
     
-Deploy the warriorwiki docker image and link it to the mysql container, and mount the mediawiki branch clone as a volume. Don't forget to specify the MySQL password as an environment variable.
+Deploy the warriorwiki docker image and link it to the mysql container, mount the mediawiki branch clone as a volume, and mount the directory containing the TLS certificates. Don't forget to specify the MySQL password as an environment variable.
 
-    docker run -d -p 80:80 -v /usr/local/mediawiki:/src/mediawiki --link mysql:mysql -e MYSQL_PASSWORD="mysecretpassword" --name=warriorwiki warriorwiki
+    docker run -d -p 80:80 -p 443:443 -v /usr/local/mediawiki:/src/mediawiki -v /etc/ssl/localcerts:/etc/ssl/localcerts --link mysql:mysql -e MYSQL_PASSWORD="mysecretpassword" --name=warriorwiki warriorwiki
 
 Open port 80 to the outside world according to your firewall rules.
 
