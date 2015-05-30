@@ -27,6 +27,6 @@ add	./mediawiki-start /usr/bin/mediawiki-start
 expose	80
 expose	443
 
-cmd	["/bin/bash"] #/usr/bin/mediawiki-extension-install && /usr/bin/mediawiki-start
+cmd	/usr/bin/mediawiki-extension-install && /usr/bin/mediawiki-start
 
 # vim:ts=8:noet:
