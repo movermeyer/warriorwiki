@@ -1,5 +1,29 @@
 #!/bin/sh
 
+#Install Parser Functions
+if [ ! -d /src/mediawiki/extensions/ParserFunctions ]; then
+    cd /src/mediawiki/extensions/
+    git clone -b REL1_24 https://github.com/wikimedia/mediawiki-extensions-ParserFunctions.git ParserFunctions
+fi
+
+#Install Cite
+if [ ! -d /src/mediawiki/extensions/Cite ]; then
+    cd /src/mediawiki/extensions/
+    git clone -b REL1_24 https://github.com/wikimedia/mediawiki-extensions-Cite.git Cite
+fi
+
+#Install Wikilog
+if [ ! -d /src/mediawiki/extensions/Wikilog ]; then
+    cd /src/mediawiki/extensions/
+    git clone -b REL1_24 https://github.com/wikimedia/mediawiki-extensions-Wikilog.git Wikilog
+fi
+
+#Install Imprint Search
+if [ ! -d /src/mediawiki/extensions/SearchBlox ]; then
+    cd /src/mediawiki/extensions/
+    git clone https://github.com/movermeyer/SearchBlox.git SearchBlox
+fi
+
 #Install wikidata
 if [ ! -d /src/mediawiki/extensions/Wikibase ]; then
     cd /src/mediawiki/
