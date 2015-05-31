@@ -7,7 +7,7 @@ run	apt-get -y update
 # Install prereqs
 run	LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y supervisor nginx-light php5-fpm php5-intl php5-mysql php5-
 run	LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y php-apc php5-gd php5-intl php5-mysqlnd php5-pgsql
-run	LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y git wget php5-cli
+run	LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y git wget php5-cli imagemagick
 
 #Install convenience apps
 run	LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y vim
