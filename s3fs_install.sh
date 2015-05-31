@@ -1,4 +1,4 @@
-apt-get install build-essential libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool pkg-config
+apt-get install -y build-essential libfuse-dev libcurl4-openssl-dev libxml2-dev mime-support automake libtool pkg-config libssl-dev
 mkdir s3_compilation
 cd s3_compilation
 wget https://github.com/s3fs-fuse/s3fs-fuse/archive/v1.78.tar.gz

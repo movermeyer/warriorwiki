@@ -27,7 +27,10 @@ DOCKER_IMAGE='warriorwiki'
 #=====================================================================================
 
 #Install Prerequisites
-apt-get install -y git docker-io openssl
+apt-get -y update
+apt-get -y upgrade
+apt-get install -y git docker.io openssl
+service docker start
 
 #Prepare directories
 mkdir -p $BASE_DIR
@@ -39,7 +42,7 @@ cd $BASE_DIR
 git clone ${GIT_REPO} src/
 
 #Clone the mediawiki repo
-cd dirname `dirname $MW_DIR`
+cd `dirname $MW_DIR`
 git clone ${MW_REPO} `basename $MW_DIR`
 
 #Create the secret key for MySQL
@@ -66,7 +69,7 @@ if [ -n "$MYSQL_PREVIOUS_BACKUP" ]; then
 fi
 
 #Start the MySQL Docker image
-docker run --name mysql -v ${DATABASE_DIR}:/var/lib/mysql -d mysql
+docker run --name mysql -v ${DATABASE_DIR}:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=`cat ${MYSQL_PASS_FILE}` -d mysql
 
 #Build The Warrior Wiki Docker Image
 cd $BASE_DIR/src/docker
@@ -77,7 +80,7 @@ mkdir -p ${SSL_CERT_DIR}
 cd ${SSL_CERT_DIR}
 openssl genrsa -out ${DNS_NAME}.key 4096
 chmod 400 ${DNS_NAME}.key
-openssl req -new -x509 -sha256 -days 365 -nodes -out ${DNS_NAME}.crt -key ${DNS_NAME}.key
+openssl req -new -x509 -sha256 -days 365 -nodes -subj "/C=CA/ST=Ontario/L=Waterloo/O=The Warrior Wiki/CN=${DNS_NAME}" -out ${DNS_NAME}.crt -key ${DNS_NAME}.key
 
 #Start the Mediawiki
-docker run -i -t --rm=true -p 80:80 -p 443:443 -v ${MW_DIR}:/src/mediawiki -v ${IMAGES_DIR}:/src/mediawiki/images -v ${SSL_CERT_DIR}:/etc/ssl/localcerts --link mysql:mysql -e MYSQL_PASSWORD=`cat ${MYSQL_PASS_FILE}` --name=${DOCKER_IMAGE} ${DOCKER_IMAGE}
+docker run -d -p 80:80 -p 443:443 -v ${MW_DIR}:/src/mediawiki -v ${IMAGES_DIR}:/src/mediawiki/images -v ${SSL_CERT_DIR}:/etc/ssl/localcerts --link mysql:mysql -e MYSQL_PASSWORD=`cat ${MYSQL_PASS_FILE}` --name=${DOCKER_IMAGE} ${DOCKER_IMAGE}
