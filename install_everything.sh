@@ -12,8 +12,8 @@ DATABASE_NAME='warriorwiki'
 DATABASE_DIR=$DATA_DIR/db
 
 MYSQL_PREVIOUS_BACKUP=$1
-MYSQL_PREVIOUS_BACKUP_DIR=dirname $MYSQL_PREVIOUS_BACKUP
-MYSQL_PREVIOUS_BACKUP_FILE=basename $MYSQL_PREVIOUS_BACKUP
+MYSQL_PREVIOUS_BACKUP_DIR=`dirname $MYSQL_PREVIOUS_BACKUP`
+MYSQL_PREVIOUS_BACKUP_FILE=`basename $MYSQL_PREVIOUS_BACKUP`
 
 IMAGES_DIR=${DATA_DIR}/${FILES_SUBDOMAIN}
 
@@ -57,20 +57,11 @@ dd if=/dev/urandom bs=1 count=32 2>/dev/null | base64 -w 0 | rev | cut -b 2- | r
 chmod 400 ${MYSQL_PASS_FILE}
 
 #Restore a backup of an existing MySQL DB
-if [ -n "$MYSQL_PREVIOUS_BACKUP" ]; then
-    read -p "Removing any existing database in '${DATABASE_DIR}'. Is this OK? y/N" -n 1 -r
-    echo    # (optional) moves to a new line
-    if [[ $REPLY =~ ^[Yy]$ ]]
-    then
-        echo "Restoring the backup MySQL DB from '${MYSQL_PREVIOUS_BACKUP}' to '${DATABASE_DIR}'"
-        docker run -d --name mysql_restore -v ${DATABASE_DIR}:/var/lib/mysql -v ${MYSQL_PREVIOUS_BACKUP_DIR}:/bak -e MYSQL_ROOT_PASSWORD=`cat ${MYSQL_PASS_FILE}` -e MYSQL_DATABASE=${DATABASE_NAME} -d mysql
-        
-        docker exec -i -t mysql_restore bash -c "mysql -u root --password=`cat ${MYSQL_PASS_FILE}` ${DATABASE_NAME} < /bak/${MYSQL_PREVIOUS_BACKUP_FILE}"
-        docker stop mysql_restore && docker rm mysql_restore
-    else
-        echo "Skipping the restore of backup MySQL DB due to user request."
-    fi
-fi
+echo "Restoring the backup MySQL DB from '${MYSQL_PREVIOUS_BACKUP}' to '${DATABASE_DIR}'"
+docker run -d --name mysql_restore -v ${DATABASE_DIR}:/var/lib/mysql -v ${MYSQL_PREVIOUS_BACKUP_DIR}:/bak -e MYSQL_ROOT_PASSWORD=`cat ${MYSQL_PASS_FILE}` -e MYSQL_DATABASE=${DATABASE_NAME} -d mysql
+
+docker exec -i -t mysql_restore bash -c "mysql -u root --password=`cat ${MYSQL_PASS_FILE}` ${DATABASE_NAME} < /bak/${MYSQL_PREVIOUS_BACKUP_FILE}"
+docker stop mysql_restore && docker rm mysql_restore
 
 #Start the MySQL Docker image
 docker run --name mysql -v ${DATABASE_DIR}:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=`cat ${MYSQL_PASS_FILE}` -d mysql
@@ -88,3 +79,5 @@ openssl req -new -x509 -sha256 -days 365 -nodes -subj "/C=CA/ST=Ontario/L=Waterl
 
 #Start the Mediawiki
 docker run -d -p 80:80 -p 443:443 -v ${MW_DIR}:/src/mediawiki -v ${IMAGES_DIR}:/src/mediawiki/images -v ${SSL_CERT_DIR}:/etc/ssl/localcerts --link mysql:mysql -e MYSQL_PASSWORD=`cat ${MYSQL_PASS_FILE}` --name=${DOCKER_IMAGE} ${DOCKER_IMAGE}
+
+docker exec -i -t ${DOCKER_IMAGE} bash -c "cd /src/mediawiki/maintenance && php5 update.php"
