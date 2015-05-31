@@ -6,7 +6,7 @@ GIT_REPO='https://github.com/movermeyer/warriorwiki.git'
 MW_REPO='https://github.com/movermeyer/mediawiki.git'
 
 DNS_NAME='warriorwiki.ca'
-FILES_SUBDOMAIN=files.${FILES_SUBDOMAIN}
+FILES_SUBDOMAIN=files.${DNS_NAME}
 
 DATABASE_NAME='warriorwiki'
 DATABASE_DIR=$DATA_DIR/db
@@ -44,6 +44,10 @@ git clone ${GIT_REPO} src/
 #Clone the mediawiki repo
 cd `dirname $MW_DIR`
 git clone ${MW_REPO} `basename $MW_DIR`
+#Install the vector skin
+cd $MW_DIR/skins
+wget https://extdist.wmflabs.org/dist/skins/Vector-REL1_24-9ace28f.tar.gz -O Vector.tar.gz
+tar xvfz Vector.tar.gz
 
 #Create the secret key for MySQL
 mkdir -p ${PRIVATE_DIR}
