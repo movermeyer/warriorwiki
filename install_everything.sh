@@ -46,7 +46,7 @@ cd `dirname $MW_DIR`
 git clone ${MW_REPO} `basename $MW_DIR`
 #Install the vector skin
 cd $MW_DIR/skins
-wget https://extdist.wmflabs.org/dist/skins/Vector-REL1_24-4f17ccc.tar.gz Vector.tar.gz
+wget https://extdist.wmflabs.org/dist/skins/Vector-REL1_24-9ace28f.tar.gz -O Vector.tar.gz
 tar xvfz Vector.tar.gz
 
 #Create the secret key for MySQL
